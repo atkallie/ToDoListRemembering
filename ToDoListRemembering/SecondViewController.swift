@@ -8,8 +8,27 @@
 
 import UIKit
 
-class SecondViewController: UIViewController {
-
+class SecondViewController: UIViewController, UITextFieldDelegate {
+    @IBOutlet var newTask: UITextField!
+    @IBAction func addNewTask(_ sender: Any) {
+        
+        let itemsObj = UserDefaults.standard.object(forKey: "itemsRemembering")
+        
+        var items : [String]
+        
+        if let tempItems = itemsObj as? [String]{
+            items = tempItems
+            items.append(newTask.text!)
+        }else{
+            items = [newTask.text!]
+        }
+        
+        UserDefaults.standard.set(items, forKey: "itemsRemembering")
+        
+        newTask.text=""
+        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -20,6 +39,17 @@ class SecondViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    //Keyboard Stuff
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        addNewTask(Any.self)
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+    }
+    
 
 }
 
